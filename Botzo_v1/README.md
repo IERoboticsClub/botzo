@@ -35,7 +35,9 @@ Our second interation, the scope was to understnd the inverse kinematic math beh
 <br>
 
 ## Resurces
-[Our inspiration project](https://hackaday.io/project/171456-diy-hobby-servos-quadruped-robot)
+[Our inspiration project 1](https://www.instructables.com/GoodBoy-3D-Printed-Arduino-Robot-Dog/)
+
+[Our inspiration project 2](https://hackaday.io/project/171456-diy-hobby-servos-quadruped-robot)
 <br>
 
 ### Videos
