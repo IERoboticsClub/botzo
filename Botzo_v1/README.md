@@ -4,6 +4,7 @@ Our second interation, the scope was to understnd the inverse kinematic math beh
 
 ## Circuit Diagram
 <br>
+<img src="Images/circuit_diagram.png">
 
 ## Robot Components
 - Arduino uno
@@ -26,7 +27,7 @@ Our second interation, the scope was to understnd the inverse kinematic math beh
 <br>
 
 ## IK study
-[Link to our collab studyes](https://colab.research.google.com/drive/1-2LA13HfGoF-sFvO-_iz6qzYOe-9e5LA?usp=sharing)
+[Link to our collab studies](https://colab.research.google.com/drive/1-2LA13HfGoF-sFvO-_iz6qzYOe-9e5LA?usp=sharing)
 
 [Link to IK paper](https://www.researchgate.net/publication/320307716_Inverse_Kinematic_Analysis_Of_A_Quadruped_Robot)
 <br>
@@ -34,7 +35,7 @@ Our second interation, the scope was to understnd the inverse kinematic math beh
 ## Evaluation
 <br>
 
-## Resurces
+## Resources
 [Our inspiration project 1](https://www.instructables.com/GoodBoy-3D-Printed-Arduino-Robot-Dog/)
 
 [Our inspiration project 2](https://hackaday.io/project/171456-diy-hobby-servos-quadruped-robot)
@@ -43,9 +44,9 @@ Our second interation, the scope was to understnd the inverse kinematic math beh
 ### Videos
 [Cool YouTube video explenation of IK](https://www.youtube.com/watch?v=HjmIOKSp7v4)
 
-[YouTube video lession on IK](https://www.youtube.com/watch?v=RH3iAmMsolo)
+[YouTube video lesson on IK](https://www.youtube.com/watch?v=RH3iAmMsolo)
 
-[Full lession on IK](https://www.youtube.com/watch?v=unwUt3kkgvE)
+[Full lesson on IK](https://www.youtube.com/watch?v=unwUt3kkgvE)
 <br>
 
 ### Papers
