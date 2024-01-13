@@ -2,6 +2,14 @@
 #include <math.h>
 #include <Arduino.h>
 
+/*
+3) try many cordinates & delay
+        - FASTER/SLOWER DELAYS
+        - HARD CODE A STREIGHT MOVMENT IN x AXES
+4) Move 2 legs toghether
+5) test: put all in rest point and move one leg randomly... is the dog still stable? if yes these are good rest pos
+*/
+
 ////////////////////////define pins for servos
 #define pinFemur_FR 2
 #define pinKnee_FR 3
@@ -47,13 +55,11 @@ const double L2 = 9.5; // Length_knee
 double X;
 double Y;
 double pi = M_PI;
-int steps[][3] = {{-4, -14, 400}, {-8, -14, 400}, {-3, -12, 200}, {0, -14, 400}, {-4, -14, 400}};
+// {{-4, -16, 300},{-10, -16, 300},{-4, -13, 100},{-4, -16, 300}};  // walk back wards for front
+int steps_front[][3] = {{-4, -16, 300},{-1, -14, 300},{-1, -16, 100},{-4, -16, 300}};
+int steps_back[][3] = {{-2, -16, 300}, {-5, -14, 300}, {-5, -16, 100}, {-2, -16, 300}};
 // each element is (X_cord, Y_cord, Delay/speed) + first one is rest pos
-size_t numSteps = sizeof(steps) / sizeof(steps[0]);
-
-
-
-
+size_t numSteps = sizeof(steps_front) / sizeof(steps_front[0]);
 
 
 
@@ -74,81 +80,68 @@ void setup() {
   Knee_BL.attach(pinKnee_BL);
 
   ////////////////////////rest position
-  restposleft(Femur_BL, Knee_BL, steps, numSteps);
-  restposleft(Femur_FL, Knee_FL, steps, numSteps);
-  restposright(Femur_BR, Knee_BR, steps, numSteps);
-  restposright(Femur_FR, Knee_FR, steps, numSteps);
+  rest2(Femur_BR, Knee_BR, steps_back, numSteps);
+  rest2(Femur_FL, Knee_FL, steps_front, numSteps);
+  rest1(Femur_BL, Knee_BL, steps_back, numSteps);
+  rest1(Femur_FR, Knee_FR, steps_front, numSteps);
   delay(3000);
 
   ////////////////////////testing
   //
-  //UpdatePosition(Femur_BL, Knee_BL, 180, 0);
-  //UpdatePosition(Femur_BR, Knee_BR, 0, 180);
-  //UpdatePosition(Femur_BR, Knee_BR, 0, 180);
-  //RightStep(Femur_BR, Knee_BR, steps, numSteps);
-  //CartesianMoveRight(Femur_BR, Knee_BR, 0, -17);
+  //UpdatePosition(Femur_BL, Knee_BL, 180, 180);
+  //UpdatePosition(Femur_BR, Knee_BR, 0, 0);
+  //CartesianMove1(Femur_FR, Knee_FR, 4, -16);
+  //CartesianMove1(Femur_BL, Knee_BL, -2, -10);
+  //CartesianMove2(Femur_BR, Knee_BR, -9, -13);
+  //CartesianMove2(Femur_BR, Knee_BR, -7, -16);
+  //Step2(Femur_BR, Knee_BR, steps_front, numSteps);
   //
   //UpdatePosition(Femur_FR, Knee_FR, 180, 180);
   //UpdatePosition(Femur_FL, Knee_FL, 0, 0);
-  //RightStep(Femur_FR, Knee_FR, steps, numSteps);
-  //CartesianMoveRight(Femur_FR, Knee_FR, 0, -17);
-  //restposright(Femur_FR, Knee_FR, steps, numSteps);
+  //Step1(Femur_FR, Knee_FR, steps_front, numSteps);
 }
 
 void loop() {
-  LeftStep(Femur_FL, Knee_FL, steps, numSteps);
-  //
-  restposleft(Femur_BL, Knee_BL, steps, numSteps);
-  restposleft(Femur_FL, Knee_FL, steps, numSteps);
-  restposright(Femur_BR, Knee_BR, steps, numSteps);
-  restposright(Femur_FR, Knee_FR, steps, numSteps);
-  delay(1000);
-  //
-  RightStep(Femur_BR, Knee_BR, steps, numSteps);
-  //
-  restposleft(Femur_BL, Knee_BL, steps, numSteps);
-  restposleft(Femur_FL, Knee_FL, steps, numSteps);
-  restposright(Femur_BR, Knee_BR, steps, numSteps);
-  restposright(Femur_FR, Knee_FR, steps, numSteps);
-  delay(1000);
-  //
-  RightStep(Femur_FR, Knee_FR, steps, numSteps);
-  //
-  restposleft(Femur_BL, Knee_BL, steps, numSteps);
-  restposleft(Femur_FL, Knee_FL, steps, numSteps);
-  restposright(Femur_BR, Knee_BR, steps, numSteps);
-  restposright(Femur_FR, Knee_FR, steps, numSteps);
-  delay(1000);
-  //
-  LeftStep(Femur_BL, Knee_BL, steps, numSteps);
-  //
-  restposleft(Femur_BL, Knee_BL, steps, numSteps);
-  restposleft(Femur_FL, Knee_FL, steps, numSteps);
-  restposright(Femur_BR, Knee_BR, steps, numSteps);
-  restposright(Femur_FR, Knee_FR, steps, numSteps);
-  delay(1000);
+
+  Step1(Femur_FR, Knee_FR, steps_front, numSteps);
+  delay(500);
+  Step1(Femur_BL, Knee_BL, steps_back, numSteps);
+  delay(500);
+  Step2(Femur_FL, Knee_FL, steps_front, numSteps);
+  delay(500);
+  Step2(Femur_BR, Knee_BR, steps_back, numSteps);
+  delay(500);
+
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////rest
-void restposleft(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
+void rest2(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
   int i = 0;
-  CartesianMoveLeft(Femur, Knee, steps[i][0], steps[i][1]);
+  CartesianMove2(Femur, Knee, steps[i][0], steps[i][1]);
   delay(steps[i][2]);
 }
-void restposright(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
+void rest1(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
   int i = 0;
-  CartesianMoveRight(Femur, Knee, steps[i][0], steps[i][1]);
+  CartesianMove1(Femur, Knee, steps[i][0], steps[i][1]);
   delay(steps[i][2]);
 }
-//////////////////////////////////////////////////////////////////////////////////////////LEFT
-void LeftStep(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
+//////////////////////////////////////////////////////////////////////////////////////////update servos angles
+void UpdatePosition(Servo& Femur, Servo& Knee, double angle_femur, double angle_knee){ // MOVE TO POSITION
+  Femur.write(angle_femur);
+  Knee.write(angle_knee);
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////// FrontLeft - BottomRight
+void Step2(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
   for (int i = 0; i < numSteps; i++){
-    CartesianMoveLeft(Femur, Knee, steps[i][0], steps[i][1]);
+    CartesianMove2(Femur, Knee, steps[i][0], steps[i][1]);
     delay(steps[i][2]);
   }
 }
-void CartesianMoveLeft(Servo& Femur, Servo& Knee, double X, double Y){
+void CartesianMove2(Servo& Femur, Servo& Knee, double X, double Y){
   // check X, Y are reachable:
   float distance = sqrt(pow(X, 2) + pow(Y, 2));
 
@@ -159,17 +152,6 @@ void CartesianMoveLeft(Servo& Femur, Servo& Knee, double X, double Y){
     double F_ang = degrees(Femur_rad);
     double Femur_ang = F_ang; //180 -
     double Knee_ang = degrees(Knee_rad);
-    /*
-    // Print statments:
-    Serial.print(X);
-    Serial.print("  :   ");
-    Serial.print(Y);
-    Serial.print("  =>   ");
-    Serial.print("  Femur_ang:  ");
-    Serial.print(Femur_ang);
-    Serial.print("  Knee_ang:  ");
-    Serial.println(Knee_ang);
-    */
     // Move servos
     UpdatePosition(Femur, Knee, Femur_ang, Knee_ang);
   }
@@ -177,14 +159,14 @@ void CartesianMoveLeft(Servo& Femur, Servo& Knee, double X, double Y){
     Serial.println("Point not reachable");
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////RIGHT
-void RightStep(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
+//////////////////////////////////////////////////////////////////////////////////////////FrontRight - BottomLeft
+void Step1(Servo& Femur, Servo& Knee, int steps[][3], size_t numSteps){
   for (int i = 0; i < numSteps; i++){
-    CartesianMoveRight(Femur, Knee, steps[i][0], steps[i][1]);
+    CartesianMove1(Femur, Knee, steps[i][0], steps[i][1]);
     delay(steps[i][2]);
   }
 }
-void CartesianMoveRight(Servo& Femur, Servo& Knee, double X, double Y){
+void CartesianMove1(Servo& Femur, Servo& Knee, double X, double Y){
   // check X, Y are reachable:
   float distance = sqrt(pow(X, 2) + pow(Y, 2));
 
@@ -196,6 +178,16 @@ void CartesianMoveRight(Servo& Femur, Servo& Knee, double X, double Y){
     double Femur_ang = 180 - F_ang;
     double K_ang = degrees(Knee_rad);
     double Knee_ang = 180 - K_ang;
+    // Move servos
+    UpdatePosition(Femur, Knee, Femur_ang, Knee_ang);
+  }
+  else {
+    Serial.println("Point not reachable");
+  }
+}
+
+
+
     /*
     // Print statments:
     Serial.print(X);
@@ -207,18 +199,3 @@ void CartesianMoveRight(Servo& Femur, Servo& Knee, double X, double Y){
     Serial.print("  Knee_ang:  ");
     Serial.println(Knee_ang);
     */
-    // Move servos
-    UpdatePosition(Femur, Knee, Femur_ang, Knee_ang);
-  }
-  else {
-    Serial.println("Point not reachable");
-  }
-}
-
-
-
-void UpdatePosition(Servo& Femur, Servo& Knee, double angle_femur, double angle_knee){
-// MOVE TO POSITION
-  Femur.write(angle_femur);
-  Knee.write(angle_knee);
-}
